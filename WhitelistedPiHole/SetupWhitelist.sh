@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 echo "Setup script for whitelisted pihole image executing"
 
 # Setup constants
@@ -7,6 +6,9 @@ WhitelistDir="/opt/whitelist"
 GitDir=".git"
 WhitelistGitDir="$WhitelistDir/$GitDir"
 WhitelistScript="$WhitelistDir/scripts/whitelist.py"
+CronDir="/etc/cron.d"
+CronFile="$CronDir/WhitelistUpdate"
+CronLog="/var/log/WhiteListUpdate.log"
 
 #Setup variables
 ForceClone=false
@@ -56,5 +58,9 @@ echo "Installed whitelist"
 
 if [ "$SetupCron" = true ]; then
 	echo "Setting up update cron"
-	(crontab -u root -e; echo "$UpdateCron root $WhitelistScript" ) | crontab -u root -
+	mkdir $CronDir
+	touch $CronFile
+	echo "$UpdateCron root $WhitelistScript >$CronFile" 
+	touch $Cronlog
+	crontab $CronFile
 fi
