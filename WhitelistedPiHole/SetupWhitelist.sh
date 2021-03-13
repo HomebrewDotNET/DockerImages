@@ -8,7 +8,7 @@ WhitelistGitDir="$WhitelistDir/$GitDir"
 WhitelistScript="$WhitelistDir/scripts/whitelist.py"
 CronDir="/etc/cron.d"
 CronFile="$CronDir/WhitelistUpdate"
-CronLog="/var/log/WhiteListUpdate.log"
+CronLog="/var/log/WhitelistUpdate.log"
 
 #Setup variables
 ForceClone=false
@@ -60,7 +60,7 @@ if [ "$SetupCron" = true ]; then
 	echo "Setting up update cron"
 	mkdir -p $CronDir
 	touch $CronFile
-	echo "$UpdateCron root $WhitelistScript >$CronLog" 
+	echo "$UpdateCron root $WhitelistScript >$CronLog" > $CronFile
 	touch $CronLog
 	crontab $CronFile
 fi
