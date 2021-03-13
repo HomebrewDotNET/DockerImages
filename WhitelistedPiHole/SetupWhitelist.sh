@@ -58,9 +58,9 @@ echo "Installed whitelist"
 
 if [ "$SetupCron" = true ]; then
 	echo "Setting up update cron"
-	mkdir $CronDir
+	mkdir -p $CronDir
 	touch $CronFile
-	echo "$UpdateCron root $WhitelistScript >$CronFile" 
-	touch $Cronlog
+	echo "$UpdateCron root $WhitelistScript >$CronLog" 
+	touch $CronLog
 	crontab $CronFile
 fi
