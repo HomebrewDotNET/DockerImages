@@ -6,7 +6,7 @@ echo "Setup script for whitelisted pihole image executing"
 WhitelistDir="/opt/whitelist"
 GitDir=".git"
 WhitelistGitDir="$WhitelistDir/$GitDir"
-WhitelistScript="$WhitelistDir/whitelist/scripts/whitelist.py"
+WhitelistScript="$WhitelistDir/scripts/whitelist.py"
 
 #Setup variables
 ForceClone=false
