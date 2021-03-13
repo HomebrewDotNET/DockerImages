@@ -1,0 +1,25 @@
+FROM pihole/pihole
+
+CMD ["echo", "Setting up whitelisted pihole"]
+
+# Install python3
+CMD ["echo", "Installing Python3"]
+
+RUN apt-get update -y
+RUN apt-get install python3 -y
+
+CMD ["echo", "Installed Python3"]
+
+# Pull setup script
+CMD ["echo", "Pulling setup script"]
+RUN mkdir -p /temp
+ADD https://github.com/dotcloud/docker/archive/master.tar.gz /temp
+
+# Setup working dir for whitelist
+CMD ["echo", "Setting up whitelist"]
+RUN mkdir -p /opt
+RUN cd /opt
+
+
+CMD ["echo", "Cloning whitelist git"]
+
