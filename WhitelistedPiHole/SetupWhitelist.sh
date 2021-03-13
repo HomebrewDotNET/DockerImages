@@ -56,5 +56,5 @@ echo "Installed whitelist"
 
 if [ "$SetupCron" = true ]; then
 	echo "Setting up update cron"
-	(crontab -u root -l; echo "$UpdateCron root $WhitelistScript" ) | crontab -u root -
+	(crontab -u root -e; echo "$UpdateCron root $WhitelistScript" ) | crontab -u root -
 fi
