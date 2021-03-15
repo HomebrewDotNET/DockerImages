@@ -23,4 +23,4 @@ RUN echo Executed setup script
 # Cleanup
 RUN rm -r /temp
 
-CMD ["echo", "Done setting up whitelisted pihole"]
+RUN echo Done setting up whitelisted pihole
