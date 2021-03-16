@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/devonkupiec/pihole-unbound
-FROM devonkupiec/pihole-unbound:latest
+FROM pihole/pihole:latest
 
 # Environment variables
 ENV FORCE_CLONE=true 
