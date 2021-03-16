@@ -57,7 +57,7 @@ echo "Installing whitelist"
 # Run whitelist script on reboot. 
 mkdir -p $CronDir
 touch $CronBootFile
-echo "@reboot root $WhitelistScript >$CronLog" > $CronBootFile
+echo "@reboot root $WhitelistScript >$CronBootLog" > $CronBootFile
 touch $CronBootLog
 crontab $CronBootFile
 
