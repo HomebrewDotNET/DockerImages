@@ -7,7 +7,9 @@ GitDir=".git"
 WhitelistGitDir="$WhitelistDir/$GitDir"
 WhitelistScript="$WhitelistDir/scripts/whitelist.py"
 CronDir="/etc/cron.d"
+CronBootFile="$CronDir/WhitelistBoot"
 CronFile="$CronDir/WhitelistUpdate"
+CronBootLog="/var/log/WhitelistBoot.log"
 CronLog="/var/log/WhitelistUpdate.log"
 
 #Setup variables
@@ -52,13 +54,18 @@ echo "Working dir setup for whitelist"
 
 # Install whitelist
 echo "Installing whitelist"
-python3 $WhitelistScript
+# Run whitelist script on reboot. 
+mkdir -p $CronDir
+touch $CronBootFile
+echo "@reboot root $WhitelistScript >$CronLog" > $CronBootFile
+touch $CronBootLog
+crontab $CronBootFile
 
+python3 $WhitelistScript --docker
 echo "Installed whitelist"
 
 if [ "$SetupCron" = true ]; then
-	echo "Setting up update cron"
-	mkdir -p $CronDir
+	echo "Setting up update cron"	
 	touch $CronFile
 	echo "$UpdateCron root $WhitelistScript >$CronLog" > $CronFile
 	touch $CronLog
