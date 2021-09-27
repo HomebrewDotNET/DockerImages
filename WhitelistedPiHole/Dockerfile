@@ -5,6 +5,7 @@ FROM pihole/pihole:latest
 ENV FORCE_CLONE=true 
 ENV	SETUP_CRON=true 
 ENV	UPDATE_CRON="0 1 * * */7"
+ENV	REBOOT_CRON_DELAY=120
 
 RUN echo Setting up whitelisted pihole
 
@@ -17,7 +18,7 @@ RUN chmod +x /temp/SetupWhitelist.sh && dos2unix /temp/SetupWhitelist.sh
 
 # Run setup scripts
 RUN echo Executing setup script
-RUN /temp/SetupWhitelist.sh $FORCE_CLONE $SETUP_CRON "$UPDATE_CRON"
+RUN /temp/SetupWhitelist.sh $FORCE_CLONE $SETUP_CRON "$UPDATE_CRON" $REBOOT_CRON_DELAY
 RUN echo Executed setup script
 
 # Cleanup

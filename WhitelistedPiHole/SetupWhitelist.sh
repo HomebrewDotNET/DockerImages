@@ -16,6 +16,7 @@ CronLog="/var/log/WhitelistUpdate.log"
 ForceClone=false
 SetupCron=false
 UpdateCron="0 1 * * */7"
+RebootCronDelay=120
 
 # Parse arguments
 if [ ! -z $1 ]; then
@@ -28,6 +29,10 @@ fi
 
 if [ ! -z $3 ]; then
    UpdateCron=$3
+fi
+
+if [ ! -z $4 ]; then
+   RebootCronDelay=$4
 fi
 
 # Install python3
@@ -57,7 +62,7 @@ echo "Installing whitelist"
 # Run whitelist script on reboot. 
 mkdir -p $CronDir
 touch $CronBootFile
-echo "@reboot root sleep 120 && $WhitelistScript >$CronBootLog" > $CronBootFile
+echo "@reboot root sleep $RebootCronDelay && $WhitelistScript >$CronBootLog" > $CronBootFile
 touch $CronBootLog
 crontab $CronBootFile
 

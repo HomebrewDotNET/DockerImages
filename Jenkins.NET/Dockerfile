@@ -1,6 +1,8 @@
-# For pulling SDK install scripts
-FROM ubuntu:latest as Initializer
-WORKDIR /source
+FROM jenkins/jenkins:lts-jdk11
+
+USER root
+
+WORKDIR /tmp
 
 # Install wget
 RUN echo Installing wget
@@ -8,24 +10,24 @@ RUN  apt-get update -y \
   && apt-get install -y wget 
 RUN echo Installed wget
 
-# Pull official .NET install script
-RUN echo Pulling .NET SDK install script
-RUN wget https://dot.net/v1/dotnet-install.sh
-RUN chmod +x dotnet-install.sh
-RUN echo Pulled .NET SDK install script
+# Add Microsoft package key
+RUN echo Adding Microsoft package key
+RUN wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+RUN rm -v packages-microsoft-prod.deb
+RUN echo Added Microsoft package key
 
-#Final image
-FROM jenkins/jenkins:lts-jdk11
-
-#Copy install scripts
-RUN echo Copying install script
-WORKDIR /tmp
-COPY --chown=root:root --from=Initializer /source/dotnet-install.sh /tmp/dotnet-install.sh
-RUN echo Copied install script
-
-# Install .NET SDK using pulled script
-RUN echo Installing SDK using install script
-RUN ./dotnet-install.sh -c 5.0
-RUN echo Installed .NET SDK
+# Install .NET Sdk
+RUN echo Installing .NET Sdk package
+RUN apt-get update -y && \
+	apt-get install -y apt-transport-https && \
+	apt-get update -y && \
+	apt-get install -y dotnet-sdk-5.0
+	
+# Install NuGet
+RUN echo Installing NuGet
+RUN  apt-get update -y \
+  && apt-get install -y nuget 
+RUN echo Installed NuGet
 
 WORKDIR /
