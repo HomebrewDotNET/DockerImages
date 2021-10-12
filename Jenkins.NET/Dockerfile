@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk11
+FROM jenkins/jenkins:latest
 
 USER root
 
@@ -29,5 +29,11 @@ RUN echo Installing NuGet
 RUN  apt-get update -y \
   && apt-get install -y nuget 
 RUN echo Installed NuGet
+
+# Install Git
+RUN echo Installing git
+RUN  apt-get update -y \
+  && apt-get install -y git 
+RUN echo Installed Git
 
 WORKDIR /
