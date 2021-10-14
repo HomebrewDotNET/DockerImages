@@ -30,10 +30,4 @@ RUN  apt-get update -y \
   && apt-get install -y nuget 
 RUN echo Installed NuGet
 
-# Install Git
-RUN echo Installing git
-RUN  apt-get update -y \
-  && apt-get install -y git 
-RUN echo Installed Git
-
 WORKDIR /
