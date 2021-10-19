@@ -21,7 +21,7 @@ RUN echo Installed wget
 COPY entrypoint.sh /app/jenkins_net/entrypoint.sh
 RUN chmod +x /app/jenkins_net/entrypoint.sh
 
-ENTRYPOINT["/app/jenkins_net/entrypoint.sh"]
+ENTRYPOINT ["/app/jenkins_net/entrypoint.sh"]
 
 USER jenkins
 
