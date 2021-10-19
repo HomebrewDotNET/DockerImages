@@ -41,8 +41,14 @@ if [ $INSTALL_DOCKER = true ]; then
 	echo "[$(date)] Installed Docker"
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
+		echo "[$(date)] Installing Qemu-User"
+		apt-get update -y && apt-get install qemu-user -y
+		echo "[$(date)] Installed Qemu-User"
 		echo "[$(date)] Setting multi arch cpu builder as default for the docker buildx command"
-		docker buildx create --name multi-arch-builder --use
+		docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+		docker buildx rm multi-arch-builder
+		docker buildx create --name multi-arch-builder --driver docker-container --use
+		docker buildx inspect --bootstrap
 		echo "[$(date)] Set multi-arch-builder as the default buildx builder"
 	fi
 fi
