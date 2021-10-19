@@ -47,7 +47,7 @@ if [ $INSTALL_DOCKER = true ]; then
 		echo "[$(date)] Setting multi arch cpu builder as default for the docker buildx command"
 		docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 		docker buildx rm multi-arch-builder
-		docker buildx create --name multi-arch-builder --driver docker-container --use
+		docker buildx create --name multi-arch-builder --driver docker-container --node $MULTI_ARCH_BUILDER_NODE_NAME --use
 		docker buildx inspect --bootstrap
 		echo "[$(date)] Set multi-arch-builder as the default buildx builder"
 	fi

@@ -11,6 +11,7 @@ ENV INSTALL_NETSDK=true
 ENV INSTALL_NUGET=true 
 ENV INSTALL_DOCKER=false 
 ENV SET_MULTI_ARCH_BUILDER=false 
+ENV MULTI_ARCH_BUILDER_NODE_NAME="Jenkins.Net-Builder"
 
 # Install Wget
 RUN echo Installing wget
