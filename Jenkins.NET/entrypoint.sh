@@ -5,7 +5,7 @@
 
 # Start
 echo "[$(date)] Setting up Jenkins.NET"
-
+mkdir -p /tmp/jenkins_net
 
 if [ $INSTALL_NETSDK = true ]; then
 	# Add Microsoft package key
