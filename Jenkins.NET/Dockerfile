@@ -9,8 +9,8 @@ WORKDIR /
 # Environment variables
 ENV INSTALL_NETSDK=true 
 ENV INSTALL_NUGET=true 
-ENV INSTALL_DOCKER=true 
-ENV SET_MULTI_ARCH_BUILDER=true 
+ENV INSTALL_DOCKER=false 
+ENV SET_MULTI_ARCH_BUILDER=false 
 
 # Install Wget
 RUN echo Installing wget
