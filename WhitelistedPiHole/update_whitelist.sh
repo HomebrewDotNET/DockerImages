@@ -10,7 +10,7 @@ GitRepo="https://github.com/anudeepND/whitelist.git"
 #Start
 echo "[$(date)] Updating whitelist for pihole"
 
-touch $TempDir
+mkdir -p $TempDir
 
 echo "[$(date)] Pulling latest whitelist scripts"
 git clone $GitRepo $TempDir
