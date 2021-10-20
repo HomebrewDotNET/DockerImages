@@ -1,7 +1,11 @@
-# Repository containing personally created docker images
+# Docker images that are small enough to be grouped together in this repository
 ## Whitelisted PiHole
 
-Pi Hole image with whitelist installed.
+PiHole image extended with the whitelist from https://github.com/anudeepND/whitelist
 
-## Jenkins .NET
-Jenkins image with additonal components installed for building and deploying .NET applications.
+Dockerhub: https://hub.docker.com/r/jenssels/whitelisted-pihole
+
+## Jenkins.NET
+Jenkins image with the option to install the .NET Sdk, NuGet and docker with optionally a builder for multu cpu architecture builds.
+
+Dockerhub: https://hub.docker.com/r/jenssels/jenkins.net
