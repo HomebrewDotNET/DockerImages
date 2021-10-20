@@ -1,27 +1,22 @@
-# https://hub.docker.com/r/devonkupiec/pihole-unbound
 FROM pihole/pihole:latest
 
 # Environment variables
-ENV FORCE_CLONE=true 
-ENV	SETUP_CRON=true 
-ENV	UPDATE_CRON="0 1 * * */7"
-ENV	REBOOT_CRON_DELAY=120
+ENV UPDATE_REFERRAL=false
+ENV	UPDATE_CRON="0 6 * * */7"
 
-RUN echo Setting up whitelisted pihole
+USER root
 
-# Pull setup script
-RUN echo Pulling setup script
-RUN mkdir -p /temp
-ADD https://raw.githubusercontent.com/Jenssels1998/DockerImageSetup/main/WhitelistedPiHole/SetupWhitelist.sh /temp/SetupWhitelist.sh
-RUN apt-get update -y && apt-get install dos2unix -y
-RUN chmod +x /temp/SetupWhitelist.sh && dos2unix /temp/SetupWhitelist.sh
+# Install Python3
+RUN echo Installing Python3
+RUN  apt-get update -y \
+  && apt-get install -y python3 
+RUN echo Installed Python3
 
-# Run setup scripts
-RUN echo Executing setup script
-RUN /temp/SetupWhitelist.sh $FORCE_CLONE $SETUP_CRON "$UPDATE_CRON" $REBOOT_CRON_DELAY
-RUN echo Executed setup script
+COPY entrypoint.sh /app/whitelisted_pihole/entrypoint.sh
+COPY update_whitelist.sh /app/whitelisted_pihole/update_whitelist.sh
+RUN chmod +x /app/whitelisted_pihole/entrypoint.sh
+RUN chmod +x /app/whitelisted_pihole/update_whitelist.sh
 
-# Cleanup
-RUN rm -r /temp
+ENTRYPOINT ["/app/whitelisted_pihole/entrypoint.sh"]
 
-RUN echo Done setting up whitelisted pihole
+USER pihole

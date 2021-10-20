@@ -1,7 +1,5 @@
 FROM jenkins/jenkins:latest
 
-ARG Entrypoint_FileName=
-
 USER root
 
 WORKDIR /
