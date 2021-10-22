@@ -13,7 +13,7 @@ echo "[$(date)] Calling update script"
 /bin/bash $UpdateScript
 echo "[$(date)] Called update script"
 
-if [ ! -z $UPDATE_CRON ]; then
+if [[ -n $UPDATE_CRON ]]; then
 	echo "[$(date)] Setting up automatic whitelist update using cron $UPDATE_CRON"
 	
 	touch $CronFile
