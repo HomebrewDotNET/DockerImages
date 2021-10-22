@@ -17,7 +17,7 @@ if [ $INSTALL_NETSDK = true ]; then
 
 	# Install .NET Sdk
 	echo "[$(date)] Installing .NET Sdk package"
-	apt-get update -y && apt-get install -y apt-transport-https dotnet-sdk-5.0 >> /tmp/jenkins_net/apt_install.log
+	apt-get update -y && apt-get install -y apt-transport-https dotnet-sdk-2.1 dotnet-sdk-3.1 dotnet-sdk-5.0 >> /tmp/jenkins_net/apt_install.log
 	echo "[$(date)] Installed .NET Sdk package"
 fi
 
