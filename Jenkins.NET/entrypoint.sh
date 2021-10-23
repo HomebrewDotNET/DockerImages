@@ -16,15 +16,22 @@ if [ $INSTALL_NETSDK = true ]; then
 	echo "[$(date)] Added Microsoft package key"
 
 	# Install .NET Sdk
-	echo "[$(date)] Installing .NET Sdk package"
-	apt-get update -y && apt-get install -y apt-transport-https dotnet-sdk-5.0 >> /tmp/jenkins_net/apt_install.log
-	echo "[$(date)] Installed .NET Sdk package"
+	echo "[$(date)] Installing .NET Sdk packages"
+	net_versions=($(echo $NETSDK_VERSIONS | tr "," "\n"))
+	apt-get update -y >> /tmp/jenkins_net/apt_install.log
+	for i in "${net_versions[@]}"
+	do
+		cmd="apt-get install -y dotnet-sdk-$i >> /tmp/jenkins_net/apt_install.log"
+		eval "$cmd"
+	done
+	
+	echo "[$(date)] Installed .NET Sdk packages"
 fi
 
 if [ $INSTALL_NUGET = true ]; then
 	# Install NuGet
 	echo "[$(date)] Installing NuGet"
-	apt-get update -y && apt-get install -y nuget 
+	apt-get update -y && apt-get install -y nuget >> /tmp/jenkins_net/apt_install.log
 	echo "[$(date)] Installed NuGet"
 fi
 
@@ -42,7 +49,7 @@ if [ $INSTALL_DOCKER = true ]; then
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
 		echo "[$(date)] Installing Qemu-User"
-		apt-get update -y && apt-get install qemu-user -y
+		apt-get update -y && apt-get install qemu-user -y >> /tmp/jenkins_net/apt_install.log
 		echo "[$(date)] Installed Qemu-User"
 		echo "[$(date)] Setting multi arch cpu builder as default for the docker buildx command"
 		docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -51,6 +58,20 @@ if [ $INSTALL_DOCKER = true ]; then
 		docker buildx inspect --bootstrap
 		echo "[$(date)] Set multi-arch-builder as the default buildx builder"
 	fi
+fi
+
+if [[ -n $EXTRA_PACKAGES ]]; then
+	# Install Extra Packages
+	echo "[$(date)] Installing extra packages"
+	packages=($(echo $EXTRA_PACKAGES | tr "," "\n"))
+	apt-get update -y >> /tmp/jenkins_net/apt_install.log
+	for i in "${packages[@]}"
+	do
+		cmd="apt-get install -y $i >> /tmp/jenkins_net/apt_install.log"
+		eval "$cmd"
+	done
+	
+	echo "[$(date)] Installed extra packages"
 fi
 
 echo "[$(date)] Finished setting up Jenkins.NET. Calling jenkins entrypoint script"
