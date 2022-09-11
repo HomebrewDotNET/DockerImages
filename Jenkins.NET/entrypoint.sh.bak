@@ -71,6 +71,6 @@ if [[ -n $EXTRA_PACKAGES ]]; then
 fi
 
 echo "[$(date)] Finished setting up Jenkins.NET. Calling jenkins entrypoint script"
-. /sbin/tini -- /usr/local/bin/jenkins.sh
+./usr/bin/tini -- /usr/local/bin/jenkins.sh
 
 exit
