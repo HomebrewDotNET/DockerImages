@@ -50,7 +50,7 @@ if [ $INSTALL_DOCKER = true ]; then
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
 		echo "[$(date)] Setting up multi architecture builder"
 		docker run --rm --privileged tonistiigi/binfmt:latest --install all
-		docker buildx rm multi-arch-builder -f
+		docker buildx ls | grep -q multi-arch-builder && docker buildx rm multi-arch-builder -f
 		if [[ -f "/config/$MULTI_ARCH_BUILDER_CONFIG_NAME" ]]; then
 			echo "[$(date)] Found config file /config/$MULTI_ARCH_BUILDER_CONFIG_NAME for builder"
 			docker buildx create --name multi-arch-builder --use --driver docker-container --node $MULTI_ARCH_BUILDER_NODE_NAME --config "/config/$MULTI_ARCH_BUILDER_CONFIG_NAME"
