@@ -63,7 +63,7 @@ if [ $INSTALL_DOCKER = true ]; then
 	fi
 fi
 
-if [[ -n $EXTRA_PACKAGES ]]; then
+if [[ ! -z $EXTRA_PACKAGES ]]; then
 	# Install Extra Packages
 	echo "[$(date)] Installing extra packages"
 	packages=($(echo $EXTRA_PACKAGES | tr "," "\n"))
