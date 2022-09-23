@@ -12,6 +12,7 @@ ENV INSTALL_DOCKER=false
 ENV SET_MULTI_ARCH_BUILDER=false 
 ENV MULTI_ARCH_BUILDER_NODE_NAME="Jenkins.Net-Builder"
 ENV EXTRA_PACKAGES=""
+ENV MULTI_ARCH_BUILDER_CONFIG_NAME="Jenkins.Net-Builder.toml"
 
 # Install Wget
 RUN echo Installing wget
