@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Exit when any command fails
+set -e
+# Set non interactive
+export DEBIAN_FRONTEND=noninteractive
 # Declare vars and set default values
 
 
@@ -10,7 +14,7 @@ mkdir -p /tmp/jenkins_net
 if [ $INSTALL_NETSDK = true ]; then
 	# Add Microsoft package key
 	echo "[$(date)] Adding Microsoft package key"
-	wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb >> /tmp/jenkins_net/wget_install.log
+	wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 	dpkg -i packages-microsoft-prod.deb
 	rm -v packages-microsoft-prod.deb
 	echo "[$(date)] Added Microsoft package key"
@@ -18,10 +22,10 @@ if [ $INSTALL_NETSDK = true ]; then
 	# Install .NET Sdk
 	echo "[$(date)] Installing .NET Sdk packages"
 	net_versions=($(echo $NETSDK_VERSIONS | tr "," "\n"))
-	apt-get update -y >> /tmp/jenkins_net/apt_install.log
+	apt-get update -yq 
 	for i in "${net_versions[@]}"
 	do
-		cmd="apt-get install -y dotnet-sdk-$i >> /tmp/jenkins_net/apt_install.log"
+		cmd="apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew dotnet-sdk-$i "
 		eval "$cmd"
 	done
 	
@@ -31,20 +35,22 @@ fi
 if [ $INSTALL_NUGET = true ]; then
 	# Install NuGet
 	echo "[$(date)] Installing NuGet"
-	apt-get update -y && apt-get install -y nuget >> /tmp/jenkins_net/apt_install.log
+	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew nuget 
 	echo "[$(date)] Installed NuGet"
 fi
 
 if [ $INSTALL_DOCKER = true ]; then
 	# Install Docker
 	echo "[$(date)] Adding Docker repository"
-	apt-get update -y && apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release >> /tmp/jenkins_net/apt_install.log
-	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew ca-certificates curl gnupg 
+	mkdir -m 0755 -p /etc/apt/keyrings
+	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	chmod a+r /etc/apt/keyrings/docker.gpg
+	echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null	
 	echo "[$(date)] Added Docker repository"
 
 	echo "[$(date)] Installing Docker"
-	apt-get update -y && apt-get install -y docker-ce docker-ce-cli >> /tmp/jenkins_net/apt_install.log
+	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 	echo "[$(date)] Installed Docker"
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
@@ -67,10 +73,10 @@ if [[ ! -z $EXTRA_PACKAGES ]]; then
 	# Install Extra Packages
 	echo "[$(date)] Installing extra packages"
 	packages=($(echo $EXTRA_PACKAGES | tr "," "\n"))
-	apt-get update -y >> /tmp/jenkins_net/apt_install.log
+	apt-get update -yq 
 	for i in "${packages[@]}"
 	do
-		cmd="apt-get install -y $i >> /tmp/jenkins_net/apt_install.log"
+		cmd="apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew $i "
 		eval "$cmd"
 	done
 	
