@@ -2,6 +2,8 @@
 
 # Exit when any command fails
 set -e
+# Set non interactive
+export DEBIAN_FRONTEND=noninteractive
 # Declare vars and set default values
 
 
@@ -20,10 +22,10 @@ if [ $INSTALL_NETSDK = true ]; then
 	# Install .NET Sdk
 	echo "[$(date)] Installing .NET Sdk packages"
 	net_versions=($(echo $NETSDK_VERSIONS | tr "," "\n"))
-	apt-get update -y 
+	apt-get update -yq 
 	for i in "${net_versions[@]}"
 	do
-		cmd="DEBIAN_FRONTEND=noninteractive apt-get install -y dotnet-sdk-$i "
+		cmd="apt-get install -yq dotnet-sdk-$i "
 		eval "$cmd"
 	done
 	
@@ -33,14 +35,14 @@ fi
 if [ $INSTALL_NUGET = true ]; then
 	# Install NuGet
 	echo "[$(date)] Installing NuGet"
-	apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y nuget 
+	apt-get update -yq && apt-get install -yq nuget 
 	echo "[$(date)] Installed NuGet"
 fi
 
 if [ $INSTALL_DOCKER = true ]; then
 	# Install Docker
 	echo "[$(date)] Adding Docker repository"
-	apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl gnupg 
+	apt-get update -yq && apt-get install -yq ca-certificates curl gnupg 
 	mkdir -m 0755 -p /etc/apt/keyrings
 	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 	chmod a+r /etc/apt/keyrings/docker.gpg
@@ -48,7 +50,7 @@ if [ $INSTALL_DOCKER = true ]; then
 	echo "[$(date)] Added Docker repository"
 
 	echo "[$(date)] Installing Docker"
-	apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
+	apt-get update -yq && apt-get install -yq docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 	echo "[$(date)] Installed Docker"
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
@@ -71,10 +73,10 @@ if [[ ! -z $EXTRA_PACKAGES ]]; then
 	# Install Extra Packages
 	echo "[$(date)] Installing extra packages"
 	packages=($(echo $EXTRA_PACKAGES | tr "," "\n"))
-	apt-get update -y 
+	apt-get update -yq 
 	for i in "${packages[@]}"
 	do
-		cmd="DEBIAN_FRONTEND=noninteractive apt-get install -y $i "
+		cmd="apt-get install -yq $i "
 		eval "$cmd"
 	done
 	
