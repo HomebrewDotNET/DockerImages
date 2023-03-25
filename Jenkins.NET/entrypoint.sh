@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Exit when any command fails
+set -e
 # Declare vars and set default values
 
 
@@ -38,13 +40,15 @@ fi
 if [ $INSTALL_DOCKER = true ]; then
 	# Install Docker
 	echo "[$(date)] Adding Docker repository"
-	apt-get update -y && apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release >> /tmp/jenkins_net/apt_install.log
-	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+	apt-get update -y && apt-get install -y ca-certificates curl gnupg >> /tmp/jenkins_net/apt_install.log
+	mkdir -m 0755 -p /etc/apt/keyrings
+	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	chmod a+r /etc/apt/keyrings/docker.gpg
+	echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null	
 	echo "[$(date)] Added Docker repository"
 
 	echo "[$(date)] Installing Docker"
-	apt-get update -y && apt-get install -y docker-ce docker-ce-cli >> /tmp/jenkins_net/apt_install.log
+	apt-get update -y && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin >> /tmp/jenkins_net/apt_install.log
 	echo "[$(date)] Installed Docker"
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
