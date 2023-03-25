@@ -23,7 +23,7 @@ if [ $INSTALL_NETSDK = true ]; then
 	apt-get update -y 
 	for i in "${net_versions[@]}"
 	do
-		cmd="apt-get install -y dotnet-sdk-$i "
+		cmd="DEBIAN_FRONTEND=noninteractive apt-get install -y dotnet-sdk-$i "
 		eval "$cmd"
 	done
 	
@@ -33,14 +33,14 @@ fi
 if [ $INSTALL_NUGET = true ]; then
 	# Install NuGet
 	echo "[$(date)] Installing NuGet"
-	apt-get update -y && apt-get install -y nuget 
+	apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y nuget 
 	echo "[$(date)] Installed NuGet"
 fi
 
 if [ $INSTALL_DOCKER = true ]; then
 	# Install Docker
 	echo "[$(date)] Adding Docker repository"
-	apt-get update -y && apt-get install -y ca-certificates curl gnupg 
+	apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl gnupg 
 	mkdir -m 0755 -p /etc/apt/keyrings
 	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 	chmod a+r /etc/apt/keyrings/docker.gpg
@@ -48,7 +48,7 @@ if [ $INSTALL_DOCKER = true ]; then
 	echo "[$(date)] Added Docker repository"
 
 	echo "[$(date)] Installing Docker"
-	apt-get update -y && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
+	apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 	echo "[$(date)] Installed Docker"
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
@@ -74,7 +74,7 @@ if [[ ! -z $EXTRA_PACKAGES ]]; then
 	apt-get update -y 
 	for i in "${packages[@]}"
 	do
-		cmd="apt-get install -y $i "
+		cmd="DEBIAN_FRONTEND=noninteractive apt-get install -y $i "
 		eval "$cmd"
 	done
 	
