@@ -21,7 +21,8 @@ if [ $INSTALL_NETSDK = true ]; then
 	# Install Microsoft signing key and repository
 	dpkg -i packages-microsoft-prod.deb
 	# Clean up
-	rm packages-microsoft-prod.deb# Update packages
+	rm packages-microsoft-prod.deb 
+	# Update packages
 	apt update -y
 	echo "[$(date)] Added Microsoft package key"
 
