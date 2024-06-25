@@ -14,9 +14,16 @@ mkdir -p /tmp/jenkins_net
 if [ $INSTALL_NETSDK = true ]; then
 	# Add Microsoft package key
 	echo "[$(date)] Adding Microsoft package key"
-	wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+	# Get OS version info
+	source /etc/os-release
+	# Download Microsoft signing key and repository
+	wget https://packages.microsoft.com/config/$ID/$VERSION_ID/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+	# Install Microsoft signing key and repository
 	dpkg -i packages-microsoft-prod.deb
-	rm -v packages-microsoft-prod.deb
+	# Clean up
+	rm packages-microsoft-prod.deb 
+	# Update packages
+	apt update -y
 	echo "[$(date)] Added Microsoft package key"
 
 	# Install .NET Sdk
@@ -44,7 +51,7 @@ if [ $INSTALL_DOCKER = true ]; then
 	echo "[$(date)] Adding Docker repository"
 	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew ca-certificates curl gnupg 
 	mkdir -m 0755 -p /etc/apt/keyrings
-	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --batch --no-tty --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 	chmod a+r /etc/apt/keyrings/docker.gpg
 	echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null	
 	echo "[$(date)] Added Docker repository"
