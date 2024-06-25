@@ -14,9 +14,15 @@ mkdir -p /tmp/jenkins_net
 if [ $INSTALL_NETSDK = true ]; then
 	# Add Microsoft package key
 	echo "[$(date)] Adding Microsoft package key"
-	wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+	# Get OS version info
+	source /etc/os-release
+	# Download Microsoft signing key and repository
+	wget https://packages.microsoft.com/config/$ID/$VERSION_ID/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+	# Install Microsoft signing key and repository
 	dpkg -i packages-microsoft-prod.deb
-	rm -v packages-microsoft-prod.deb
+	# Clean up
+	rm packages-microsoft-prod.deb# Update packages
+	apt update -y
 	echo "[$(date)] Added Microsoft package key"
 
 	# Install .NET Sdk
