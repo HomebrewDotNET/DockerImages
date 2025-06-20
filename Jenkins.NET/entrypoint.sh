@@ -10,6 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 # Start
 echo "[$(date)] Setting up Jenkins.NET"
 mkdir -p /tmp/jenkins_net
+cd /tmp/jenkins_net
 
 if [ $INSTALL_NETSDK = true ]; then
 	# Add Microsoft package key
@@ -19,7 +20,8 @@ if [ $INSTALL_NETSDK = true ]; then
 	# Download Microsoft signing key and repository
 	wget https://packages.microsoft.com/config/$ID/$VERSION_ID/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 	# Install Microsoft signing key and repository
-	dpkg -i packages-microsoft-prod.deb
+	apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' ./packages-microsoft-prod.deb
+	apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' --fix-broken
 	# Clean up
 	rm packages-microsoft-prod.deb 
 	# Update packages
@@ -34,6 +36,7 @@ if [ $INSTALL_NETSDK = true ]; then
 	do
 		cmd="apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew dotnet-sdk-$i "
 		eval "$cmd"
+		apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' --fix-broken
 	done
 	
 	echo "[$(date)] Installed .NET Sdk packages"
@@ -43,13 +46,15 @@ if [ $INSTALL_NUGET = true ]; then
 	# Install NuGet
 	echo "[$(date)] Installing NuGet"
 	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew nuget 
+	apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' --fix-broken
 	echo "[$(date)] Installed NuGet"
 fi
 
 if [ $INSTALL_DOCKER = true ]; then
 	# Install Docker
 	echo "[$(date)] Adding Docker repository"
-	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew ca-certificates curl gnupg 
+	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew curl gnupg 
+	apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' --fix-broken
 	mkdir -m 0755 -p /etc/apt/keyrings
 	curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --batch --no-tty --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 	chmod a+r /etc/apt/keyrings/docker.gpg
@@ -58,6 +63,7 @@ if [ $INSTALL_DOCKER = true ]; then
 
 	echo "[$(date)] Installing Docker"
 	apt-get update -yq && apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
+	apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' --fix-broken
 	echo "[$(date)] Installed Docker"
 	
 	if [ $SET_MULTI_ARCH_BUILDER = true ]; then
@@ -85,6 +91,7 @@ if [[ ! -z $EXTRA_PACKAGES ]]; then
 	do
 		cmd="apt-get install -yq -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew $i "
 		eval "$cmd"
+		apt-get install -qyf -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' --fix-broken
 	done
 	
 	echo "[$(date)] Installed extra packages"
