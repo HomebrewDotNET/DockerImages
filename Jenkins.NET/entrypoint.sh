@@ -12,6 +12,10 @@ echo "[$(date)] Setting up Jenkins.NET"
 mkdir -p /tmp/jenkins_net
 cd /tmp/jenkins_net
 
+# Refresh certs in case of custom certificates
+echo "[$(date)] Refreshing CA certificates"
+/usr/sbin/update-ca-certificates --fresh
+
 if [ $INSTALL_NETSDK = true ]; then
 	# Add Microsoft package key
 	echo "[$(date)] Adding Microsoft package key"
