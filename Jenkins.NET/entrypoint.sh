@@ -1,7 +1,4 @@
 #!/bin/bash
-
-# Exit when any command fails
-set -e
 # Set non interactive
 export DEBIAN_FRONTEND=noninteractive
 # Declare vars and set default values
