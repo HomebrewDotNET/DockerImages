@@ -17,7 +17,7 @@ ENV MULTI_ARCH_BUILDER_CONFIG_NAME="Jenkins.Net-Builder.toml"
 # Install packages
 RUN echo Installing packages
 RUN  apt-get update -y \
-  && apt-get install -y wget && ca-certificates
+  && apt-get install -y wget ca-certificates
 RUN echo Installed packages
 
 COPY entrypoint.sh /app/jenkins_net/entrypoint.sh
