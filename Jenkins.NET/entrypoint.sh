@@ -3,7 +3,6 @@
 export DEBIAN_FRONTEND=noninteractive
 # Declare vars and set default values
 
-
 # Start
 echo "[$(date)] Setting up Jenkins.NET"
 mkdir -p /tmp/jenkins_net
